@@ -46,8 +46,11 @@ class WeatherViewModel {
 
     // Convert weather API data in representable model
     private func getWeatherInfo(weatherData: WeatherData) -> WeatherModel? {
+        //Change tepture fro kelvin to celsius
+        let celsiusTemp = weatherData.main.temp - 273.15
+
         let weather = WeatherModel(sunRiseSeconds: TimeInterval(weatherData.sys.sunrise), sunSetSeconds: TimeInterval(weatherData.sys.sunset), description: weatherData.weather[0].description, cityName: weatherData.name, conditionID: weatherData
-            .weather[0].id, icon: weatherData.weather[0].icon, temperature: weatherData.main.temp, humidity: weatherData.main.humidity, wind: weatherData.wind.speed)
+            .weather[0].id, icon: weatherData.weather[0].icon, temperature: celsiusTemp, humidity: weatherData.main.humidity, wind: weatherData.wind.speed)
         return weather
     }
 }

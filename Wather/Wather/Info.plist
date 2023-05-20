@@ -23,12 +23,18 @@
 	</dict>
 
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Description</string>
+    <string>Please allow location, we will show you today's weather.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Description</string>
+    <string>Please allow location, we will show you today's weather.</string>
 
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>Description</string>
+    <string>Please allow location, we will show you today's weather.</string>
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

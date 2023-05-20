@@ -31,6 +31,7 @@
 		7423F8142A172A6500BFB6EF /* SearchListTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7423F8122A172A6500BFB6EF /* SearchListTVC.xib */; };
 		7423F8172A172A6A00BFB6EF /* SearchResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7423F8162A172A6A00BFB6EF /* SearchResultModel.swift */; };
 		7423F81B2A174C2100BFB6EF /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7423F81A2A174C2100BFB6EF /* UIViewControllerExtension.swift */; };
+		7423F81F2A18985700BFB6EF /* LocatioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7423F81E2A18985700BFB6EF /* LocatioManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		7423F8122A172A6500BFB6EF /* SearchListTVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchListTVC.xib; sourceTree = "<group>"; };
 		7423F8162A172A6A00BFB6EF /* SearchResultModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultModel.swift; sourceTree = "<group>"; };
 		7423F81A2A174C2100BFB6EF /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		7423F81E2A18985700BFB6EF /* LocatioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocatioManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				7423F7EC2A16846800BFB6EF /* AlertManager.swift */,
+				7423F81E2A18985700BFB6EF /* LocatioManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				7423F8012A170D6000BFB6EF /* WeatherData.swift in Sources */,
 				7423F7EA2A1680CD00BFB6EF /* LocationService.swift in Sources */,
 				7423F8172A172A6A00BFB6EF /* SearchResultModel.swift in Sources */,
+				7423F81F2A18985700BFB6EF /* LocatioManager.swift in Sources */,
 				7423F8042A1713A500BFB6EF /* ImageViewExtension.swift in Sources */,
 				7423F7BB2A16583500BFB6EF /* SceneDelegate.swift in Sources */,
 				7423F7F52A1697D700BFB6EF /* CombineNetworkService.swift in Sources */,

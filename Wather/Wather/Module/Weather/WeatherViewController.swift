@@ -23,55 +23,41 @@ class WeatherViewController: UIViewController {
     @IBOutlet private weak var riseLabel: UILabel!
     @IBOutlet private weak var setLabel: UILabel!
 
-    let locationManager = CLLocationManager()
     let defaults = UserDefaults.standard
+    var locationManager: UserLocationManager?
 
     var viewModel = WeatherViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-
         setGradientColor(topColor: .blue, bottomColor: .gray)
-
-        if let lat = defaults.object(forKey: "latitude") as? Double{
-            if let lon = defaults.object(forKey: "longitude") as? Double {
-                viewModel.getWeatherData(lat: lat, lon: lon)
-            }
-        } else {
-            determineMyCurrentLocation()
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         setupWeatherView(isShown: false)
+
+        // Check user last user lat and lon for API call
+        if let lat = defaults.object(forKey: "latitude") as? Double, let lon = defaults.object(forKey: "longitude") as? Double {
+            viewModel.getWeatherData(lat: lat, lon: lon)
+        } else {
+            determineUserCurrentLocation()
+        }
     }
 
     // Show data when get from API call
-    func setupWeatherView(isShown: Bool) {
+    private func setupWeatherView(isShown: Bool) {
         weatherView.isHidden = !isShown
         lblFetchingData.isHidden = isShown
     }
 
     // For current locaion
-    func determineMyCurrentLocation() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-
-        DispatchQueue.global().async {
-            if CLLocationManager.locationServicesEnabled() == true {
-                self.locationManager.requestLocation()
-            }
-        }
-    }
-
-    func showSearchController() {
-        let searchVC = SearchViewController.loadFromNib()
-        searchVC.delegate = self
-        navigationController?.pushViewController(searchVC, animated: false)
+    private func determineUserCurrentLocation() {
+        locationManager = UserLocationManager()
+        locationManager?.delegate = self
+        locationManager?.checkLocationAuthorization()
     }
 
     private func setGradientColor(topColor: UIColor, bottomColor: UIColor) {
@@ -95,26 +81,17 @@ class WeatherViewController: UIViewController {
     @IBAction func searchButtonTapped(_ sender: Any) {
         showSearchController()
     }
-}
 
-// MARK: - CLLocationManagerDelegate
-extension WeatherViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        locationManager.stopUpdatingLocation()
-        if let location = locations.last {
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
-            self.defaults.set(lat, forKey: "latitude")
-            self.defaults.set(lon, forKey: "longitude")
-
-            viewModel.getWeatherData(lat: lat, lon: lon)
-        }
+    private func showSearchController() {
+        // Navigate to search screen
+        let searchVC = SearchViewController.loadFromNib()
+        searchVC.delegate = self
+        navigationController?.pushViewController(searchVC, animated: false)
     }
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        debugPrint("Location error is \(error.localizedDescription)")
-        DispatchQueue.main.async {
-            self.present(AlertManager.createAlert(title: "Alert", message: "We are unable to fetch your location, please check setting or search with city name."), animated: true)
-        }
+
+    private func saveLatAndLon(lat: Double, lon: Double) {
+        self.defaults.set(lat, forKey: "latitude")
+        self.defaults.set(lon, forKey: "longitude")
     }
 }
 
@@ -131,7 +108,7 @@ extension WeatherViewController: WeatherViewModelDelegate {
         self.riseLabel.text = weather.sunRiseString
         self.setLabel.text = weather.sunSetString
         if let icon = weather.icon {
-            let iconId = "https://openweathermap.org/img/wn/\(icon)@2x.png"
+            let iconId = Constants.weather_img_url + "\(icon)@2x.png"
             if let iconURL = URL(string: iconId) {
                 self.conditionImage.load(url: iconURL)
             }
@@ -149,10 +126,20 @@ extension WeatherViewController: WeatherViewModelDelegate {
 extension WeatherViewController: SearchViewControllerDelegate {
     func getSelectedCity(lat: Double, lon: Double) {
         // Save city lat and lon for next time
-        self.defaults.set(lat, forKey: "latitude")
-        self.defaults.set(lon, forKey: "longitude")
+        saveLatAndLon(lat: lat, lon: lon)
+    }
+}
 
-        // Call weather api for searched city lat and lon
+// Getting user curent location from User Location manager
+extension WeatherViewController: UserLocationManagerDelegate {
+    func getUserLocation(lat: Double, lon: Double) {
+        saveLatAndLon(lat: lat, lon: lon)
         viewModel.getWeatherData(lat: lat, lon: lon)
+    }
+
+    func getLocationError(error: String) {
+        DispatchQueue.main.async {
+            self.present(AlertManager.createAlert(title: "Error", message: error), animated: true)
+        }
     }
 }
